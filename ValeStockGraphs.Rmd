@@ -20,7 +20,7 @@ library(latticeExtra)
 library(readxl)
 ValeStockPrice <- read_excel("~/Desktop/Vale Stock Prices/ValeStockPrice.xlsx", 
     sheet = "Vale v Fortescue")
-View(ValeStockPrice)
+#View(ValeStockPrice)
 ```
 
 ```{r}
