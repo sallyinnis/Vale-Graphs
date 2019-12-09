@@ -1,0 +1,251 @@
+---
+title: "Vale Stock work"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning = FALSE, include = FALSE, error = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(cowplot)
+library(ggthemes)
+library(latticeExtra)
+```
+
+```{r}
+library(readxl)
+ValeStockPrice <- read_excel("~/Desktop/Vale Stock Prices/ValeStockPrice.xlsx", 
+    sheet = "Vale v Fortescue")
+View(ValeStockPrice)
+```
+
+```{r}
+#ValeStockPrice %>%  
+    #as.data.frame()
+```
+
+```{r}
+(Valev62 = ValeStockPrice %>% 
+  select(Vale_Close,`62_Fe`) %>% 
+  ggplot(aes(x = `62_Fe`, y = Vale_Close)) +
+  geom_point()+
+  xlab('Iron Ore Fines 62% Fe') +
+  ylab('Vale Close'))
+
+(FMXv62 = ValeStockPrice %>% 
+  select(FMX_Close, `62_Fe`) %>% 
+  ggplot(aes(x =`62_Fe`, y = FMX_Close)) + 
+  geom_point() +
+  xlab('Iron Ore Fines 62% Fe') +
+  ylab('FMX Close')  )
+
+  
+```
+
+```{r}
+LastyearStocks = ValeStockPrice %>%
+  filter(Date >= as.Date("2018-08-02"))
+  
+```
+
+
+```{r}
+(Valev62_2019 = LastyearStocks %>% 
+  select(Vale_Close,`62_Fe`) %>% 
+  ggplot(aes(x = `62_Fe`, y = Vale_Close)) +
+  geom_point()+
+  xlab('Iron Ore Fines 62% Fe') +
+  ylab('Vale Close')+
+  ggtitle('Vale Price Aug 2018 - Aug 2019'))
+
+(FMXv62_2019 = LastyearStocks %>% 
+  select(FMX_Close, `62_Fe`) %>% 
+  ggplot(aes(x =`62_Fe`, y = FMX_Close)) + 
+  geom_point() +
+  xlab('Iron Ore Fines 62% Fe') +
+  ylab('FMX Close')+
+  ggtitle('FMX Price Aug 2018 - Aug 2019'))
+
+```
+
+```{r, warning = FALSE}
+(Valev58 = ValeStockPrice %>% 
+  select(Vale_Close,`58_Fe`) %>% 
+  ggplot(aes(x = `58_Fe`, y = Vale_Close)) +
+  geom_point()+
+  xlab('Iron Ore Fines 58% Fe') +
+  ylab('Vale Close'))
+
+(FMXv58 = ValeStockPrice %>% 
+  select(FMX_Close, `58_Fe`) %>% 
+  ggplot(aes(x =`58_Fe`, y = FMX_Close)) +
+  geom_point() +
+  xlab('Iron Ore Fines 58% Fe') +
+  ylab('FMX Close')  )
+```
+
+
+```{r, warning = FALSE}
+(Valev58_2019 = LastyearStocks %>% 
+  select(Vale_Close,`58_Fe`) %>% 
+  ggplot(aes(x = `58_Fe`, y = Vale_Close)) +
+  geom_point()+
+  xlab('Iron Ore Fines 58% Fe') +
+  ylab('Vale Close')+
+  ggtitle('Fe58 Vale Price Aug 2018 - Aug 2019'))
+
+(FMXv58_2019 = LastyearStocks %>% 
+  select(FMX_Close, `58_Fe`) %>% 
+  ggplot(aes(x =`58_Fe`, y = FMX_Close)) + 
+  geom_point() +
+  xlab('Iron Ore Fines 58% Fe') +
+  ylab('FMX Close')+
+  ggtitle('Fe 58 FMX Price Aug 2018 - Aug 2019'))
+```
+
+```{r, warning = FALSE}
+#Looking at Vale stock price vs other commodity exposures (Nickel and Copper) since 2015.
+
+(ValevCopper = ValeStockPrice %>% 
+  select(Vale_Close, Cu_Price) %>% 
+  ggplot(aes(x = Cu_Price, y = Vale_Close)) +
+  geom_point()+
+  xlab('Copper Price (USD/t)') +
+  ylab('Vale Close')+
+  ggtitle('Copper Price v. Vale Price'))
+
+(ValevNickel = ValeStockPrice %>% 
+  select(Vale_Close, Ni_Price) %>% 
+  ggplot(aes(x = Ni_Price, y = Vale_Close)) +
+  geom_point()+
+  xlab('Nickel Price (USD/t)') +
+  ylab('Vale Close')+
+  ggtitle('Nickel Price v. Vale Price'))
+```
+
+
+``````{r, warning = FALSE}
+#Looking at Vale stock price vs other commodity exposures (Nickel and Copper) since Aug 2018.
+
+(ValevCopper_2019 = LastyearStocks %>% 
+  select(Vale_Close, Cu_Price) %>% 
+  ggplot(aes(x = Cu_Price, y = Vale_Close)) +
+  geom_point()+
+  xlab('Copper Price (USD/t)') +
+  ylab('Vale Close')+
+  ggtitle('Copper Price v. Vale Price Aug 2018 - Aug 2019'))
+
+(ValevNickel_2019 = LastyearStocks%>% 
+  select(Vale_Close, Ni_Price) %>% 
+  ggplot(aes(x = Ni_Price, y = Vale_Close)) +
+  geom_point()+
+  xlab('Nickel Price (USD/t)') +
+  ylab('Vale Close')+
+  ggtitle('Nickel Price v. Vale Price Aug 2018 - Aug 2019'))
+
+#In the last year - it does not suggest that copper or nickel prices have affected stock prices over the last year. It seems from the 2015-present graphs that there was a correlation between the commodity prices and vale stock. 
+```
+
+
+```{r, warning = FALSE}
+#Looking at the stock prices of Vale and FMX against BRL and AUS exchange rate
+(ValevBRL = ValeStockPrice %>% 
+  select(Vale_Close, BRL_USDRate) %>% 
+  ggplot(aes(x = BRL_USDRate, y = Vale_Close)) +
+  geom_point()+
+  xlab('BRL/USD exchange rate') +
+  ylab('Vale Close')+
+  ggtitle('Brazilian Real Exchange Rate v. Vale Price'))
+
+(FMXvAUS = ValeStockPrice %>% 
+  select(FMX_Close, AUS_USDRate) %>% 
+  ggplot(aes(x = AUS_USDRate, y = FMX_Close)) +
+  geom_point()+
+  xlab('AUS/USD exchange rate') +
+  ylab('FMX Close')+
+  ggtitle('AUS Exchange Rate v. FMX Price'))
+
+```
+
+```{r, warning = FALSE}
+#Looking at the stock prices of Vale and FMX against BRL and AUS exchange rate over the last year
+(ValevBRL = LastyearStocks %>% 
+  select(Vale_Close, BRL_USDRate) %>% 
+  ggplot(aes(x = BRL_USDRate, y = Vale_Close)) +
+  geom_point()+
+  xlab('BRL/USD exchange rate') +
+  ylab('Vale Close')+
+  ggtitle('Brazilian Real Exchange Rate v. Vale Price Aug 2018 - Aug 2019'))
+
+(FMXvAUS = LastyearStocks %>% 
+  select(FMX_Close, AUS_USDRate) %>% 
+  ggplot(aes(x = AUS_USDRate, y = FMX_Close)) +
+  geom_point()+
+  xlab('AUS/USD exchange rate') +
+  ylab('FMX Close')+
+  ggtitle('AUS Exchange Rate v. FMX Price Aug 2018 - Aug 2019'))
+
+```
+
+```{r}
+graphValevBRL = LastyearStocks %>% 
+  select(Date, Vale_Close, BRL_USDRate)
+
+Graph1 = ggplot(data = graphValevBRL, aes(x = Date, y = BRL_USDRate)) +
+  geom_line(size = 1, colour = 'blue')+
+  xlab('Date') +
+  ylab('Real/USD Exchange Rate')
+
+Graph2 = ggplot(data = graphValevBRL , aes(x = Date, y = Vale_Close)) +
+  geom_line(aes(x = Date, y = Vale_Close), size = 1, colour = 'dark green') +
+  xlab('Date') +
+  ylab('Vale Close') 
+
+plot_grid(Graph1, Graph2, labels = c('Brazilian Real Exchange Rate', 'Vale Close'), label_size = 12)
+
+#windows(xpinch=340, ypinch=340)
+
+```
+
+
+```{r}
+
+graphFMXvAus = LastyearStocks %>% 
+  select(Date, FMX_Close, AUS_USDRate)
+
+Graph1a = ggplot(data = graphFMXvAus, aes(x = Date, y = AUS_USDRate)) +
+  geom_line(size = 1, colour = 'blue')+
+  xlab('Date') +
+  ylab('AUS/USD Exchange Rate')
+
+Graph2a = ggplot(data = graphFMXvAus , aes(x = Date, y = FMX_Close)) +
+  geom_line(aes(x = Date, y = FMX_Close), size = 1, colour = 'dark green') +
+  xlab('Date') +
+  ylab('FMX Close') 
+
+plot_grid(Graph1a, Graph2a, labels = c('AUS Exchange Rate', 'FMX Close'), label_size = 12)
+
+#windows(xpinch=340, ypinch=340)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
